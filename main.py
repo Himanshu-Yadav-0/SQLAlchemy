@@ -22,7 +22,21 @@ session = Session()
 # Defines Models: Users/ Tasks
 class User(Base):
     __tablename__ = "users"
-    id = Column()
-    name = Column()
-    email = Column()
-    tasks= Column()
+    id = Column(Integer,primary_key=True)
+    name = Column(String,nullable=False)
+    email = Column(String,nullable=False,unique=True)
+    tasks = relationship("Task",back_populates="user",cascade="all,delete-orphan")
+
+class Tasks(Base):
+    __tablename__ = "tasks"
+    id = Column(Integer,primary_key=True)
+    title = Column(String[50],nullable=False)
+    description = Column(String)
+    user_id = Column(Integer,ForeignKey('users.id'))
+    user = relationship("User",back_populates='tasks')
+
+Base.metadata.create_all(engine)
+
+
+# Utility Functions
+
